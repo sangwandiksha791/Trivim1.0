@@ -44,7 +44,7 @@ import shutil
 import RunPMVS
 import thread
 import threading
-import addPlacemark_new
+#import addPlacemark_new
 import database_enter
 import DemoDatabase
 import sqlite3
@@ -820,7 +820,7 @@ def constructBuildingClicked():
                     hght=hght+float(list_ht[countJPG])
                     print "height of floor is",outputFileName,hght
     threeD.pushButton_8.setEnabled(True)
-    addPlacemark_new.main()
+    #addPlacemark_new.main()
     print "\n\n\nEntering values in the database..  Wait\n"
     database_enter.run()
     print "\n All values have been added  move to the query section"

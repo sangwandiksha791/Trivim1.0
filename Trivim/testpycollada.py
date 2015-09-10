@@ -137,11 +137,93 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
     str4_4 = '\n</altitude>\n</Location>\n'
     str5_1 = '<Orientation>\n<heading>\n'
     str5_2 = '\n</heading>\n<tilt>0</tilt>\n<roll>0</roll>\n</Orientation>\n<Scale>\n<x>1</x>\n<y>1</y>\n<z>1</z>\n</Scale>\n<Link>\n<href>untitled.dae</href>\n</Link>'
-    str5_3 = '\n</Model>\n</Placemark>\n</Document>\n</kml>'
+    str5_3 = '\n</Model>\n</Placemark>\n'
     print "path as after string lines",path
     print m1position
     str_final = str4_1 +str(longi) + str4_2 + str(lat) + str4_3 + str(hkml) + str4_4 + str5_1+ str5_2 + str5_3
     f.write(str_final)
+
+
+
+       
+    
+    str7 = '<Placemark>\n<ExtendedData>\n<Data name="Name">\n<value>'
+   
+
+    
+    #global placemarkStr
+    os.chdir(xx)
+    
+        
+
+    
+##    yy= os.path.join(inputPath,filename)
+##    os.chdir(yy)
+    DIR=os.listdir(inputPath)
+    print DIR
+    for dir1 in DIR:
+     print dir1
+     os.chdir(inputPath+ '\\' + dir1)
+     fHeight = open(r'heights.txt','r')
+     hstr = fHeight.readline()
+     fHeight.close()
+        #reading the heights.txt file of each building
+     tempList = hstr.split('\t')
+     num_floors = len(tempList) - 1
+     for i in range(num_floors):
+         filename1 = (dir1 + '_' + '%s' %(i+1))
+     fcoor = open( dir1+'.txt','r')
+     cstr1 = fcoor.readline()
+     fcoor.close()
+     lat = (cstr.split('\t'))[1]
+     longi = (cstr.split('\t'))[2]
+     lat1 = (cstr.split('\t'))[3]
+     longi1 = (cstr.split('\t'))[4]
+     lat2 = (cstr.split('\t'))[5]
+     longi2 = (cstr.split('\t'))[6]
+     lat3 = (cstr.split('\t'))[7]
+     longi3 = (cstr.split('\t'))[8]
+     fdetail = open(filename1+'.txt','r')
+     lines = fdetail.readlines()
+     temp = len(lines)
+     fdetail.close()
+     values=[]
+     
+    for j in range(temp):
+       tempStr = (lines[j])[:-1]
+       values.append(tempStr)
+       print "values are:",values
+       
+    f3 = open(filename1+'.txt','r')
+    linesCol = f3.readlines()
+    totalLength = len(linesCol)
+    print "length is:", totalLength
+    f3.close()
+    str8 ='</value>\n</Data>\n'
+
+#="'+(linesCol[k])[:-1]+'"
+ #  '+values[k+1]+' 
+    #for k in range(totalLength):
+    str9  ='<Data><value></value></Data>'
+    str10 ='<Data name="Height:"><value>\n'
+    str11='</value>\n</Data>\n</ExtendedData>\n'
+    
+    str12='<Point>\n<coordinates>\n'
+    str12_1='</coordinates>\n<altitudeMode>relativeToGround</altitudeMode>\n<extrude>1</extrude>\n</Point>\n<LineString>\n<extrude>1</extrude>\n'
+    str13 ='<tessellate>0</tessellate>\n<altitudeMode>relativeToGround</altitudeMode>\n<coordinates>\n'
+   
+   
+    str14='</coordinates>\n</LineString>\n</Placemark>\n'
+    str15='\n</Document>\n</kml>\n'
+
+
+
+
+
+
+
+    str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+'\n'+str(longi)+'\n'+str(h)+str12_1  + str13 +    str(lat) +  str(longi)+str(h) +'\n'+str(lat1) + str(longi1)+ str(h) +'\n' +str(lat2) +str(longi2) +str(h)   +'\n' +str(lat3) +  str(longi3)+str(h) +str14 + str15 
+    f.write(str_final1)
     f.close()
     print "Great! KML file generated! Please check the local directory."
     makekmz(outputPath);
