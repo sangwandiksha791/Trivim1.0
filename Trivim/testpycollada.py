@@ -221,8 +221,8 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
 
 
 
-
-    str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+'\n'+str(longi)+'\n'+str(h)+str12_1  + str13 +    str(lat) +  str(longi)+str(h) +'\n'+str(lat1) + str(longi1)+ str(h) +'\n' +str(lat2) +str(longi2) +str(h)   +'\n' +str(lat3) +  str(longi3)+str(h) +str14 + str15 
+    str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+','+str(longi)+','+str(h)+str12_1  + str13 +    str(lat)+',' +  str(longi)+','+str(h) +'\n'+str(lat1) +','+ str(longi1)+','+ str(h) +'\n' +str(lat2)+',' +str(longi2)+',' +str(h)   +'\n' +str(lat3)+',' +  str(longi3)+','+str(h) +str14 + str15      
+    #str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+'\n'+str(longi)+'\n'+str(h)+str12_1  + str13 +    str(lat) +  str(longi)+str(h) +'\n'+str(lat1) + str(longi1)+ str(h) +'\n' +str(lat2) +str(longi2) +str(h)   +'\n' +str(lat3) +  str(longi3)+str(h) +str14 + str15 
     f.write(str_final1)
     f.close()
     print "Great! KML file generated! Please check the local directory."
