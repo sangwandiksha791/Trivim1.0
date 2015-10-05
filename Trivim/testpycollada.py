@@ -3,28 +3,15 @@ from collada import *
 import os
 import shutil
 import UTM as con
+import addPlacemark_new
 
 projPath=""
-
-def makekmz(outputPath):
+placemarkStr=""
+def makezip(outputPath):
     path = os.getcwd()
     print path
-    try:
-        shutil.make_archive(outputPath, "zip", outputPath)
-    except:
-        print "can not make file"
+    shutil.make_archive(outputPath, "zip", outputPath)
     print "Zip created!"
-    try:
-        os.copyfile(outputPath+".zip",outputPath+".kmz")
-    except:
-        print "overwriting"
-        try:
-            os.remove(outputPath+".kmz")
-            os.rename(outputPath+".zip",outputPath+".kmz")
-        except:
-            print "Failed"
-        
-        
 
 
 def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
@@ -63,6 +50,7 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
    # w = l
     print "testpycollada a is", a
     print "testpycollada b is", b
+    #c=[0,0, 0,a[1], b[1], 0,a[2], b[2], 0,a[3], b[3], 0,0,0, h,a[1], b[1], h,a[2], b[2], h,a[3], b[3], h]
     #m1position = [0,0, 0, 0, b, 0, w, b, 0, w, 0, 0, 0, 0, h, 0, b, h, w, b, h, w, 0, h]
     m1position = [a[2], b[2], 0,a[1], b[1], 0,0,0, 0,a[3], b[3], 0,a[2],b[2], h,a[1], b[1], h,0,0, h,a[3], b[3],h]
     m1normal = [1, 0, 0, -1, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 1, 0, 0, -1]
@@ -114,20 +102,23 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
         longi = (cstr.split('\t'))[1]
         print longi,"longi"
         lat = (cstr.split('\t'))[2]
+        name=filename
 ##    data = np.loadtxt((r'Outputcoordinates.txt'), delimiter = ',')
     path2 = os.chdir(outputpath)
     print path2
     mesh.write("untitled.dae")
     print "Cheers! The COLLADA file has been generated. Please check the local working directory."
     string = '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+
     str1 = '<Document>\n<name>\n'
     strx = '\n</name>\n'
     f = open('doc.kml','w')
+    
     str2 = '<Style id="default">\n</Style>\n<Style id="default0">\n</Style>\n<StyleMap id= "default1">\n<Pair>\n<key>normal</key>\n<styleUrl>#default</styleUrl>\n</Pair>\n<Pair>\n<key>highlight</key>\n<styleUrl>#default0</styleUrl>\n</Pair>\n</StyleMap>\n'
     str3 = '<Placemark>\n<name>Model</name><styleUrl>#default1</styleUrl>\n<Model id="model_1">\n<altitudeMode>relativeToGround</altitudeMode>\n<Location>\n'
     f.write(string)
     f.write(str1)
-    f.write(imageName.split('.')[0])
+    f.write(imageName)
     f.write(strx)
     f.write(str2)
     f.write(str3)
@@ -143,9 +134,9 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
     str_final = str4_1 +str(longi) + str4_2 + str(lat) + str4_3 + str(hkml) + str4_4 + str5_1+ str5_2 + str5_3
     f.write(str_final)
 
-
-
-       
+    
+  
+   
     
     str7 = '<Placemark>\n<ExtendedData>\n<Data name="Name">\n<value>'
    
@@ -162,7 +153,7 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
     DIR=os.listdir(inputPath)
     print DIR
     for dir1 in DIR:
-     print dir1
+     print "dir1 is:",dir1
      os.chdir(inputPath+ '\\' + dir1)
      fHeight = open(r'heights.txt','r')
      hstr = fHeight.readline()
@@ -172,6 +163,7 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
      num_floors = len(tempList) - 1
      for i in range(num_floors):
          filename1 = (dir1 + '_' + '%s' %(i+1))
+     print "filename1 is", filename1    
      fcoor = open( dir1+'.txt','r')
      cstr1 = fcoor.readline()
      fcoor.close()
@@ -183,33 +175,42 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
      longi2 = (cstr.split('\t'))[6]
      lat3 = (cstr.split('\t'))[7]
      longi3 = (cstr.split('\t'))[8]
+    
      fdetail = open(filename1+'.txt','r')
      lines = fdetail.readlines()
      temp = len(lines)
      fdetail.close()
      values=[]
      
-    for j in range(temp):
+     for j in range(temp):
        tempStr = (lines[j])[:-1]
        values.append(tempStr)
        print "values are:",values
+     for i in range(num_floors):
+         filename1 = (dir1 + '_' + '%s' %(i+1))
+         os.chdir(inputPath+ '\\' + dir1)
+         f3 = open(filename1+'.txt','r')
+         linesCol = f3.readlines()
+         totalLength = len(linesCol)
+         print "length is:", totalLength
+
+
+
        
-    f3 = open(filename1+'.txt','r')
-    linesCol = f3.readlines()
-    totalLength = len(linesCol)
-    print "length is:", totalLength
-    f3.close()
+      
+      
+    
     str8 ='</value>\n</Data>\n'
 
 #="'+(linesCol[k])[:-1]+'"
  #  '+values[k+1]+' 
     #for k in range(totalLength):
-    str9  ='<Data><value></value></Data>'
+    
     str10 ='<Data name="Height:"><value>\n'
     str11='</value>\n</Data>\n</ExtendedData>\n'
     
     str12='<Point>\n<coordinates>\n'
-    str12_1='</coordinates>\n<altitudeMode>relativeToGround</altitudeMode>\n<extrude>1</extrude>\n</Point>\n<LineString>\n<extrude>1</extrude>\n'
+    str12_1='</coordinates>\n<altitudeMode>absolute</altitudeMode>\n<extrude>1</extrude>\n</Point>\n<LineString>\n<extrude>1</extrude>\n'
     str13 ='<tessellate>0</tessellate>\n<altitudeMode>relativeToGround</altitudeMode>\n<coordinates>\n'
    
    
@@ -217,18 +218,37 @@ def makeKML(path,outputpath,imageName,height,hkml,a,b,filename,inputPath):
     str15='\n</Document>\n</kml>\n'
 
 
+   
 
 
 
-
-    str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+','+str(longi)+','+str(h)+str12_1  + str13 +    str(lat)+',' +  str(longi)+','+str(h) +'\n'+str(lat1) +','+ str(longi1)+','+ str(h) +'\n' +str(lat2)+',' +str(longi2)+',' +str(h)   +'\n' +str(lat3)+',' +  str(longi3)+','+str(h) +str14 + str15      
-    #str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+'\n'+str(longi)+'\n'+str(h)+str12_1  + str13 +    str(lat) +  str(longi)+str(h) +'\n'+str(lat1) + str(longi1)+ str(h) +'\n' +str(lat2) +str(longi2) +str(h)   +'\n' +str(lat3) +  str(longi3)+str(h) +str14 + str15 
+   # str_final1 = str7 +   str(imageName)+ str8  + str9 + str10 +  str(h) + str11 + str12+str(lat)+str(longi)+'\n'+str(h)+str12_1  + str13 +  str(co1) +'\n'+ str(co2)+ '\n'+str(co3)+'\n' + str(co4)+str14 + str15
+    str_final1 = str7 +   str(dir1)+ str8
+    
+   
+    str_final2 = str10 +  str(h) + str11 + str12+str(lat)+','+str(longi)+','+str(h) + str12_1  + str13 +    str(lat)+',' +  str(longi)+','+str(h) +'\n'+str(lat1) +','+ str(longi1)+','+ str(h) +'\n' +str(lat2)+',' +str(longi2)+',' +str(h)   +'\n' +str(lat3)+',' +  str(longi3)+','+str(h) +str14 + str15                                                                                                                                                                                                                                                                              
+  
     f.write(str_final1)
+    for p in range(totalLength):
+            tempStr1 = (linesCol[p])[:-1]
+            
+            tempStr2= values[p]
+            str9  ='<Data name="'+tempStr1+'"><value>'+tempStr2+'</value></Data>'
+
+            #f.write(str9)
+            f3.close()
+    f.write(str_final2)
+
+
+
+
+
+
     f.close()
     print "Great! KML file generated! Please check the local directory."
-    makekmz(outputPath);
+    makezip(outputPath);
 
-
+  
 
 
 
